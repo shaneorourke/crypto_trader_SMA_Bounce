@@ -1,0 +1,6 @@
+#### NOTE - SUDO NANO CHANGE /etc/crontab and add this in:
+##### sudo crontab -e didn't work, nor did crontab -e
+## This will run every minute
+
+# Crypto Trading
+* * * * * root /usr/bin/bash /home/pi/Documents/git/crypto_trader_SMA_Bounce/run_trader_cron.sh 2> /tmp/crontab_script_log.txt 2>&1
