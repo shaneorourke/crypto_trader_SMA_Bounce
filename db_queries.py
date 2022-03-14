@@ -77,6 +77,13 @@ for curr in currencies:
         if curr_profit != 'None':
             profit = round((float(curr_profit)/float(price['price']))*100,2)
             print(f'Profit Percentage:{profit}%')
+            qty = 0.001
+            usdt_value = float(price['price']) * qty
+            usdt_profit = usdt_value*(profit/100)
+            print(f'USDT Profit:${round(usdt_profit,2)}')
+
+
+
 
     ## Take Profit Details Est
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
@@ -107,3 +114,7 @@ if sale_made !='0':
     if tot_profit != 'None':
         total_profit = round((float(curr_profit)/float(price['price']))*100,2)
         print(f'##### Total Profit Percentage:{total_profit}%')
+        qty = 0.001
+        usdt_value = float(price['price']) * qty
+        usdt_profit = usdt_value*(total_profit/100)
+        print(f'Total USDT Profit:${round(usdt_profit,2)}')
