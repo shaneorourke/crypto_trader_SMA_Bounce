@@ -81,12 +81,12 @@ for curr in currencies:
     ## Take Profit Details Est
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
-    print(f'Original Stop Est:{clean_up_sql_out(result,1)}')
+    print(f'Take Profit:{clean_up_sql_out(result,1)}')
 
     ## Stop Details Est
     c.execute('SELECT round(price-(price * 0.015),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
-    print(f'Original Stop Est:{clean_up_sql_out(result,1)}')
+    print(f'Stop Limit:{clean_up_sql_out(result,1)}')
 
 
     ## Orders
