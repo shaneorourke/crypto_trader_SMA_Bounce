@@ -121,7 +121,7 @@ def trader(curr):
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
         if lastrow.FastSMA < lastrow.SlowSMA:
-            write_to_file(f'{curr}','[info]Looking for BUY[/info]')
+            write_to_file(f'{curr}','Looking for BUY[/info]')
             if lastrow.Close > lastrow.SlowSMA:
                 # Long Position
                 write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
@@ -133,8 +133,9 @@ def trader(curr):
         take_profit = buy_price * 0.01
         take_profit_price = buy_price + take_profit
         stop = buy_price - (take_profit * 1.5)
-        write_to_file(f'{curr}',f'Take Profit:{float(take_profit_price)}')
-        write_to_file(f'{curr}',f'Stop Price:{float(stop)}')
+        write_to_file(f'{curr}',f'Buy Price:{round(float(buy_price),2)}')
+        write_to_file(f'{curr}',f'Take Profit:{round(float(take_profit_price),2)}')
+        write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')
         if lastrow.Close >= take_profit_price:
             write_to_file(f'{curr}','Take Profit Triggered Sale')
             market_order(curr,qty,False,False,lastrow.Close,'TP')

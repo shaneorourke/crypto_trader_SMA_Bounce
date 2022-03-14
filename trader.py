@@ -113,7 +113,7 @@ def trader(curr):
         if lastrow.FastSMA < lastrow.SlowSMA:
             console.print('[info]Looking for BUY[/info]')
             if lastrow.Close > lastrow.SlowSMA:
-                # Long Position
+                # Short Position -- Currently in long - change to short / sell for futures
                 console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
