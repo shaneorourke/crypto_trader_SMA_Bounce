@@ -55,7 +55,7 @@ for curr in currencies:
     c.execute(f'SELECT position FROM position WHERE Currency="{curr}"')
     result = c.fetchall()
     pos = clean_up_sql_out(result,0)
-    if pos == 0:
+    if pos == '0':
         position = 'BUYING'
     else:
         position = 'SELLING'
