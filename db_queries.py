@@ -46,6 +46,11 @@ for curr in currencies:
     buy_price = c.fetchall()
     buy_price = clean_up_sql_out(buy_price,1)
 
+    ## Made First Sale
+    c.execute(f'SELECT count(*) FROM orders WHERE Currency="{curr}" and market = "SELL"')
+    sale_made = c.fetchall()
+    sale_made = clean_up_sql_out(sale_made,1)
+
     ## Position Open
     c.execute(f'SELECT position FROM position WHERE Currency="{curr}"')
     result = c.fetchall()
@@ -68,9 +73,10 @@ for curr in currencies:
                 select * from order_check""")
     result = c.fetchall()
     curr_profit = clean_up_sql_out(result,1)
-    if curr_profit != 'None':
-        profit = round((float(curr_profit)/float(price['price']))*100,2)
-        print(f'Profit Percentage:{profit}%')
+    if sale_made !='0':
+        if curr_profit != 'None':
+            profit = round((float(curr_profit)/float(price['price']))*100,2)
+            print(f'Profit Percentage:{profit}%')
 
     ## Take Profit Details Est
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
@@ -97,6 +103,7 @@ c.execute(f"""with last_order as (select market, market_date from orders ORDER B
             select * from order_check""")
 result = c.fetchall()
 tot_profit = clean_up_sql_out(result,1)
-if tot_profit != 'None':
-    total_profit = round((float(curr_profit)/float(price['price']))*100,2)
-    print(f'##### Total Profit Percentage:{total_profit}%')
+if sale_made !='0':
+    if tot_profit != 'None':
+        total_profit = round((float(curr_profit)/float(price['price']))*100,2)
+        print(f'##### Total Profit Percentage:{total_profit}%')
