@@ -130,9 +130,9 @@ def trader(curr):
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)
-        take_profit = buy_price * 0.01
-        take_profit_price = buy_price + take_profit
-        stop = buy_price - (take_profit * 1.5)
+        take_profit = float(buy_price) * 0.01
+        take_profit_price = float(buy_price) + take_profit
+        stop = float(buy_price) - (take_profit * 1.5)
         write_to_file(f'{curr}',f'Buy Price:{round(float(buy_price),2)}')
         write_to_file(f'{curr}',f'Take Profit:{round(float(take_profit_price),2)}')
         write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')
