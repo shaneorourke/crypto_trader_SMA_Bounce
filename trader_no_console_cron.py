@@ -120,8 +120,13 @@ def trader(curr):
                 write_to_file(f'{curr}',f'Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
-        else:
-            write_to_file(f'{curr}','Slow SMA Greater Than Fast SMA')                
+        if lastrow.FastSMA < lastrow.SlowSMA:
+            write_to_file(f'{curr}','[info]Looking for BUY[/info]')
+            if lastrow.Close > lastrow.SlowSMA:
+                # Long Position
+                write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
+                market_order(curr,qty,True,False,lastrow.Close,'buy')
+                changepos(curr, buy=True)               
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)
