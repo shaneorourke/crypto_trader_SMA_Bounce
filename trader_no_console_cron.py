@@ -107,35 +107,35 @@ def trader(curr):
     applytechnicals(df)
     lastrow = df.iloc[-1]
     position = check_position(curr)
-    write_to_file(f'{curr}',f'[info]Currency:[/info]{curr}')
-    write_to_file(f'{curr}',f'[info]Position:[/info]{position}')
+    write_to_file(f'{curr}',f'Currency:{curr}')
+    write_to_file(f'{curr}',f'Position:{position}')
     close = lastrow.Close
-    write_to_file(f'{curr}',f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
-    write_to_file(f'{curr}',f'[info]FastSMA Price:[/info][integer]{round(float(lastrow.FastSMA),2)}[/integer]')
-    write_to_file(f'{curr}',f'[info]SlowSMA Price:[/info][integer]{round(float(lastrow.SlowSMA),2)}[/integer]')
+    write_to_file(f'{curr}',f'Current Price:{float(close)}')
+    write_to_file(f'{curr}',f'FastSMA Price:{round(float(lastrow.FastSMA),2)}')
+    write_to_file(f'{curr}',f'SlowSMA Price:{round(float(lastrow.SlowSMA),2)}')
     if int(position) == 0:
         if lastrow.FastSMA > lastrow.SlowSMA:
-            write_to_file(f'{curr}','[info]Looking for BUY[/info]')
+            write_to_file(f'{curr}','Looking for BUY')
             if lastrow.Close < lastrow.SlowSMA:
                 write_to_file(f'{curr}',f'Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
         else:
-            write_to_file(f'{curr}','[neg_warning]Slow SMA Greater Than Fast SMA[/neg_warning]')                
+            write_to_file(f'{curr}','Slow SMA Greater Than Fast SMA')                
     if int(position) != 0:
-        write_to_file(f'{curr}','[info]Looking for SELL[/info]')
+        write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)
         take_profit = buy_price * 0.01
         take_profit_price = buy_price + take_profit
         stop = buy_price - (take_profit * 1.5)
-        write_to_file(f'{curr}',f'[info]Take Profit:[/info][integer]{float(take_profit_price)}[/integer]')
-        write_to_file(f'{curr}',f'[info]Stop Price:[/info][integer]{float(stop)}[/integer]')
+        write_to_file(f'{curr}',f'Take Profit:{float(take_profit_price)}')
+        write_to_file(f'{curr}',f'Stop Price:{float(stop)}')
         if lastrow.Close >= take_profit_price:
-            write_to_file(f'{curr}','[pos_warning]Take Profit Triggered Sale[/pos_warning]')
+            write_to_file(f'{curr}','Take Profit Triggered Sale')
             market_order(curr,qty,False,False,lastrow.Close,'TP')
             changepos(curr,buy=False)
         if lastrow.Close < stop:
-            write_to_file(f'{curr}','[neg_warning]STOP LOSS TRIGGERED SALE[/neg_warning]')
+            write_to_file(f'{curr}','STOP LOSS TRIGGERED SALE')
             market_order(curr,qty,False,False,lastrow.Close,'SL')
             changepos(curr,buy=False)
 
