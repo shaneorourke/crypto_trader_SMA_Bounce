@@ -120,9 +120,9 @@ def trader(curr):
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
     if usdt >= 30:
-        write_to_file(f'{curr}',f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
+        write_to_file(f'{curr}',f'Upping Quantity:{float(qty2)}')
         qty=qty2
-    write_to_file(f'{curr}',f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
+    write_to_file(f'{curr}',f'USDT Wallet:{float(usdt)}')
     write_to_file(f'{curr}',f'Current Price:{float(close)}')
     write_to_file(f'{curr}',f'FastSMA Price:{round(float(lastrow.FastSMA),2)}')
     write_to_file(f'{curr}',f'SlowSMA Price:{round(float(lastrow.SlowSMA),2)}')

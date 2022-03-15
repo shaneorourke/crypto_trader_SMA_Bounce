@@ -112,6 +112,7 @@ def trader(curr):
     if usdt >= 30:
         console.print(f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
         qty=qty2
+    console.print(f'[info]USDT Wallet:[/info][integer]{float(usdt)}[/integer]')
     console.print(f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
     if int(position) == 0:
         console.print(f'[info]FastSMA Price:[/info][integer]{round(float(lastrow.FastSMA),2)}[/integer]')
