@@ -1,4 +1,5 @@
 from binance import Client
+from numpy import right_shift
 import pandas as pd
 import binance_keys as bk
 import sqlite3 as sql
@@ -89,6 +90,12 @@ def get_buy_value(curr):
     result = clean_up_sql_out(result,1)
     return result
 
+def get_wallet(curr):
+    right_curr = curr[3:]
+    left_curr = curr[:-4]
+    left_curr_bal = client.get_asset_balance(left_curr)
+    right_curr_bal = client.get_asset_balance(right_curr)
+    return left_curr_bal['free'],right_curr_bal['free']
 
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
@@ -99,6 +106,12 @@ def trader(curr):
     console.print(f'[info]Currency:[/info]{curr}')
     console.print(f'[info]Position:[/info]{position}')
     close = lastrow.Close
+    wallet = get_wallet(curr)
+    usdt = float(wallet[1])
+    qty2 = float(usdt) / float(lastrow.Close)
+    if usdt >= 30:
+        console.print(f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
+        qty=qty2
     console.print(f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
     if int(position) == 0:
         console.print(f'[info]FastSMA Price:[/info][integer]{round(float(lastrow.FastSMA),2)}[/integer]')

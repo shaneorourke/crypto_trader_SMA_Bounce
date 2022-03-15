@@ -100,6 +100,12 @@ def get_buy_value(curr):
     result = clean_up_sql_out(result,1)
     return result
 
+def get_wallet(curr):
+    right_curr = curr[3:]
+    left_curr = curr[:-4]
+    left_curr_bal = client.get_asset_balance(left_curr)
+    right_curr_bal = client.get_asset_balance(right_curr)
+    return left_curr_bal['free'],right_curr_bal['free']
 
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
@@ -110,6 +116,13 @@ def trader(curr):
     write_to_file(f'{curr}',f'Currency:{curr}')
     write_to_file(f'{curr}',f'Position:{position}')
     close = lastrow.Close
+    wallet = get_wallet(curr)
+    usdt = float(wallet[1])
+    qty2 = float(usdt) / float(lastrow.Close)
+    if usdt >= 30:
+        write_to_file(f'{curr}',f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
+        qty=qty2
+    write_to_file(f'{curr}',f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
     write_to_file(f'{curr}',f'Current Price:{float(close)}')
     write_to_file(f'{curr}',f'FastSMA Price:{round(float(lastrow.FastSMA),2)}')
     write_to_file(f'{curr}',f'SlowSMA Price:{round(float(lastrow.SlowSMA),2)}')
