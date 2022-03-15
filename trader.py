@@ -118,14 +118,14 @@ def trader(curr):
         console.print(f'[info]FastSMA Price:[/info][integer]{round(float(lastrow.FastSMA),2)}[/integer]')
         console.print(f'[info]SlowSMA Price:[/info][integer]{round(float(lastrow.SlowSMA),2)}[/integer]')
         if lastrow.FastSMA > lastrow.SlowSMA:
-            console.print('[info]Looking for BUY[/info]')
+            console.print('[info]Looking for BUY Fast over Slow[/info]')
             if lastrow.Close < lastrow.SlowSMA:
                 # Long Position
                 console.print(f'Fast over Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
         if lastrow.FastSMA < lastrow.SlowSMA:
-            console.print('[info]Looking for BUY[/info]')
+            console.print('[info]Looking for BUY Slow over Fast[/info]')
             if lastrow.Close > lastrow.SlowSMA:
                 # Short Position -- Currently in long - change to short / sell for futures
                 console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
