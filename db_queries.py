@@ -83,8 +83,6 @@ for curr in currencies:
             print(f'USDT Profit:${round(usdt_profit,2)}')
 
 
-
-
     ## Take Profit Details Est
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
@@ -94,15 +92,6 @@ for curr in currencies:
     c.execute('SELECT round(price-(price * 0.015),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
     print(f'Stop Limit:{clean_up_sql_out(result,1)}')
-
-
-    ## Orders
-    print()
-    c.execute(f'SELECT * FROM orders WHERE Currency="{curr}" ORDER BY market_date ASC')
-    result = c.fetchall()
-    for row in result:
-        print(f'Orders:{clean_up_sql_out(row,1)}')
-
 
     print()
 ## Profitability
