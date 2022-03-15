@@ -97,10 +97,11 @@ for curr in currencies:
 
 
     ## Orders
-    #c.execute(f'SELECT * FROM orders WHERE Currency="{curr}" ORDER BY market_date DESC LIMIT 5')
-    #result = c.fetchall()
-    #for row in result:
-    #    print(f'Orders:{clean_up_sql_out(row,1)}')
+    print()
+    c.execute(f'SELECT * FROM orders WHERE Currency="{curr}" ORDER BY market_date ASC LIMIT 5')
+    result = c.fetchall()
+    for row in result:
+        print(f'Orders:{clean_up_sql_out(row,1)}')
 
 
     print()
