@@ -142,7 +142,7 @@ def trader(curr):
             if lastrow.Close < lastrow.SlowSMA:
                 # Long Position
                 console.print(f'Fast over Slow SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_fast_over_slow')
                 changepos(curr, buy=True)
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
@@ -153,7 +153,7 @@ def trader(curr):
             if lastrow.Close > lastrow.SlowSMA:
                 # Short Position -- Currently in long - change to short / sell for futures
                 console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
                 changepos(curr, buy=True)
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
