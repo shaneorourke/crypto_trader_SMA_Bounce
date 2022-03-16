@@ -86,15 +86,22 @@ def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
         side='SELL'
     if binance_buy:    
         order = client.create_order(symbol=curr,side=side,type='MARKET',quantity=qty)
-        order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+        db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
     else:
-        order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
-    c.execute(order)
+        db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+    c.execute(db_order)
     conn.commit()
+    write_to_file(f'{curr}',db_order)
     write_to_file(f'{curr}',order)
 
 def get_buy_value(curr):
     c.execute(f'SELECT price FROM orders WHERE Currency = "{curr}" order by market_date desc LIMIT 1')
+    result = c.fetchone()
+    result = clean_up_sql_out(result,1)
+    return result
+
+def get_buy_qty(curr):
+    c.execute(f'SELECT quantity FROM orders WHERE Currency = "{curr}" order by market_date desc LIMIT 1')
     result = c.fetchone()
     result = clean_up_sql_out(result,1)
     return result
@@ -118,6 +125,13 @@ def qty_decimals(curr,close=float,qty=float):
         decimal_limit=len(str(round(close,2)).replace('.',''))-1
         qty=str(qty)[:decimal_limit]
     return qty
+
+def check_sale_sold(curr):
+    wallet = get_wallet(curr)
+    if wallet[0] > wallet[1]:
+        return False
+    else:
+        return True
 
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
@@ -174,14 +188,23 @@ def trader(curr):
         write_to_file(f'{curr}',f'Buy Price:{round(float(buy_price),2)}')
         write_to_file(f'{curr}',f'Take Profit:{round(float(take_profit_price),2)}')
         write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')
+        qty = get_buy_qty(curr)
+        write_to_file(f'{curr}',f'Buy Qty:{round(float(qty),2)}')
         if lastrow.Close >= take_profit_price:
             write_to_file(f'{curr}','Take Profit Triggered Sale')
             market_order(curr,qty,False,binance_buy,lastrow.Close,'TP')
-            changepos(curr,buy=False)
+            if check_sale_sold(curr):
+                changepos(curr,buy=False)
+            else:
+                write_to_file(f'{curr}','SELL ERROR')
         if lastrow.Close < stop:
             write_to_file(f'{curr}','STOP LOSS TRIGGERED SALE')
             market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
-            changepos(curr,buy=False)
+            if check_sale_sold(curr):
+                changepos(curr,buy=False)
+            else:
+                write_to_file(f'{curr}','SELL ERROR')
+
 
 for coin in postframe.Currency:
     trader(coin)

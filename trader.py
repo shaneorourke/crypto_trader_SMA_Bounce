@@ -89,6 +89,12 @@ def get_buy_value(curr):
     result = clean_up_sql_out(result,1)
     return result
 
+def get_buy_qty(curr):
+    c.execute(f'SELECT quantity FROM orders WHERE Currency = "{curr}" order by market_date desc LIMIT 1')
+    result = c.fetchone()
+    result = clean_up_sql_out(result,1)
+    return result
+
 def get_wallet(curr):
     right_curr = curr[3:]
     left_curr = curr[:-4]
@@ -108,6 +114,13 @@ def qty_decimals(curr,close=float,qty=float):
         decimal_limit=len(str(round(close,2)).replace('.',''))-1
         qty=str(qty)[:decimal_limit]
     return qty
+
+def check_sale_sold(curr):
+    wallet = get_wallet(curr)
+    if wallet[0] > wallet[1]:
+        return False
+    else:
+        return True
 
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
@@ -166,14 +179,22 @@ def trader(curr):
         console.print(f'[info]Buy Price:[/info][integer]{round(float(buy_price),2)}[/integer]')
         console.print(f'[info]Take Profit:[/info][integer]{round(float(take_profit_price),2)}[/integer]')
         console.print(f'[info]Stop Price:[/info][integer]{round(float(stop),2)}[/integer]')
+        qty = get_buy_qty(curr)
+        console.print(f'[info]Buy Price:[/info][integer]{round(float(qty),2)}[/integer]')
         if lastrow.Close >= take_profit_price:
             console.print('[pos_warning]Take Profit Triggered Sale[/pos_warning]')
             market_order(curr,qty,False,False,lastrow.Close,'TP')
-            changepos(curr,buy=False)
+            if check_sale_sold(curr):
+                changepos(curr,buy=False)
+            else:
+                console.print('[info]SELL ERROR[/info]')
         if lastrow.Close < stop:
             console.print('[neg_warning]STOP LOSS TRIGGERED SALE[/neg_warning]')
             market_order(curr,qty,False,False,lastrow.Close,'SL')
-            changepos(curr,buy=False)
+            if check_sale_sold(curr):
+                changepos(curr,buy=False)
+            else:
+                console.print('[info]SELL ERROR[/info]')
 
 
 
