@@ -151,7 +151,7 @@ def trader(curr):
             write_to_file(f'{curr}','Looking for BUY Fast over Slow')
             if lastrow.Close < lastrow.SlowSMA:
                 write_to_file(f'{curr}',f'Slow SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,False,lastrow.Close,'buy_fast_over_slow')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_fast_over_slow')
                 changepos(curr, buy=True)
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
@@ -181,7 +181,7 @@ def trader(curr):
             changepos(curr,buy=False)
         if lastrow.Close < stop:
             write_to_file(f'{curr}','STOP LOSS TRIGGERED SALE')
-            market_order(curr,qty,False,False,lastrow.Close,'SL')
+            market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
             changepos(curr,buy=False)
 
 for coin in postframe.Currency:
