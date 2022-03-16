@@ -1,4 +1,3 @@
-from msilib.schema import Error
 from binance import Client
 import pandas as pd
 import binance_keys as bk
