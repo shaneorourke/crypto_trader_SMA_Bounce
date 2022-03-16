@@ -156,16 +156,17 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 write_to_file(f'{curr}',f'Close needs to drop:{round(float(distane_from_trigger),2)}')
-        if lastrow.FastSMA < lastrow.SlowSMA:
-            write_to_file(f'{curr}','Looking for BUY Slow over Fast')
-            if lastrow.Close > lastrow.SlowSMA:
-                # Long Position
-                write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,False,lastrow.Close,'buy')
-                changepos(curr, buy=True)               
-            else:
-                distane_from_trigger = close - lastrow.SlowSMA
-                write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
+        ## Uncomment for futures - should be short / sell here
+        #if lastrow.FastSMA < lastrow.SlowSMA:
+        #    write_to_file(f'{curr}','Looking for BUY Slow over Fast')
+        #    if lastrow.Close > lastrow.SlowSMA:
+        #        # Long Position
+        #        write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
+        #        market_order(curr,qty,True,False,lastrow.Close,'buy')
+        #        changepos(curr, buy=True)               
+        #    else:
+        #        distane_from_trigger = close - lastrow.SlowSMA
+        #        write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)
