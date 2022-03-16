@@ -107,6 +107,21 @@ def get_wallet(curr):
     right_curr_bal = client.get_asset_balance(right_curr)
     return left_curr_bal['free'],right_curr_bal['free']
 
+def qty_decimals(curr,close=float,qty=float):
+    base_qty = postframe[postframe.Currency == curr].quantity.values[0]
+    if len(str(round(close,2))) - str(close).find('.') == 2:
+        close = float(str(round(close,2))+'1')
+        print(close)
+    if str(close).find('.') == -1:
+        close = float(str(round(close,2))+'.11')
+        print(close)
+    if qty < base_qty:
+        qty=base_qty
+    else:
+        decimal_limit=len(str(round(close,2)).replace('.',''))-1
+        qty=str(qty)[:decimal_limit]
+    return qty
+
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
     df = gethourlydata(curr)
@@ -119,9 +134,16 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    if usdt >= 30:
-        write_to_file(f'{curr}',f'Upping Quantity:{float(qty2)}')
+    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+    minimum_wallet = close*qty
+    if usdt >= minimum_wallet:
+        write_to_file(f'{curr}',f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
         qty=qty2
+    else:
+        binance_buy = False
+        write_to_file(f'{curr}',f'[info]More USDT Needed Min is:[/info][integer]{minimum_wallet}[/integer]')
+    write_to_file(f'{curr}',f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
+    qty = qty_decimals(curr,close,qty)
     write_to_file(f'{curr}',f'USDT Wallet:{float(usdt)}')
     write_to_file(f'{curr}',f'Current Price:{float(close)}')
     write_to_file(f'{curr}',f'FastSMA Price:{round(float(lastrow.FastSMA),2)}')

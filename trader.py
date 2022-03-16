@@ -97,6 +97,21 @@ def get_wallet(curr):
     right_curr_bal = client.get_asset_balance(right_curr)
     return left_curr_bal['free'],right_curr_bal['free']
 
+def qty_decimals(curr,close=float,qty=float):
+    base_qty = postframe[postframe.Currency == curr].quantity.values[0]
+    if len(str(round(close,2))) - str(close).find('.') == 2:
+        close = float(str(round(close,2))+'1')
+        print(close)
+    if str(close).find('.') == -1:
+        close = float(str(round(close,2))+'.11')
+        print(close)
+    if qty < base_qty:
+        qty=base_qty
+    else:
+        decimal_limit=len(str(round(close,2)).replace('.',''))-1
+        qty=str(qty)[:decimal_limit]
+    return qty
+
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
     df = gethourlydata(curr)
@@ -109,9 +124,16 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    if usdt >= 30:
+    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+    minimum_wallet = close*qty
+    if usdt >= minimum_wallet:
         console.print(f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
         qty=qty2
+    else:
+        binance_buy = False
+        console.print(f'[info]More USDT Needed Min is:[/info][integer]{minimum_wallet}[/integer]')
+    console.print(f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
+    qty = qty_decimals(curr,close,qty)
     console.print(f'[info]USDT Wallet:[/info][integer]{float(usdt)}[/integer]')
     console.print(f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
     if int(position) == 0:
@@ -122,14 +144,14 @@ def trader(curr):
             if lastrow.Close < lastrow.SlowSMA:
                 # Long Position
                 console.print(f'Fast over Slow SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,False,lastrow.Close,'buy')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
                 changepos(curr, buy=True)
         if lastrow.FastSMA < lastrow.SlowSMA:
             console.print('[info]Looking for BUY Slow over Fast[/info]')
             if lastrow.Close > lastrow.SlowSMA:
                 # Short Position -- Currently in long - change to short / sell for futures
                 console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,False,lastrow.Close,'buy')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
                 changepos(curr, buy=True)
     if int(position) != 0:
         console.print('[info]Looking for SELL[/info]')
