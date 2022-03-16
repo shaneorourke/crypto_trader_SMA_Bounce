@@ -31,7 +31,7 @@ c.execute('SELECT timestamp FROM last_update ORDER BY timestamp DESC LIMIT 1')
 result = c.fetchone()
 result = clean_up_sql_out(result,0)
 time_now = datetime.now()
-console.print(f'[info]Last  Update[/info][integer]:{result}[/integer]')
+console.print(f'[info]Last Update[/info][integer]:{result}[/integer]')
 console.print(f'[info]Datetime Now[/info][integer]:{str(time_now)}[/integer]')
 
 console.print()
