@@ -210,6 +210,7 @@ def trader(curr):
 
 
 for coin in postframe.Currency:
+    print(datetime.now())
     trader(coin)
     last_update()
     write_to_file(f'{coin}','')
