@@ -74,14 +74,18 @@ def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
         side='BUY'
     else:
         side='SELL'
-    if binance_buy:    
-        order = client.create_order(symbol=curr,side=side,type='MARKET',quantity=qty)
-        order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+    if binance_buy:
+        try:
+            order = client.create_order(symbol=curr,side=side,type='MARKET',quantity=qty)
+        except Exception as e:
+            console.print(f'[neg_warning]Binance Error:[/neg_warning]{e}')
+        db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
     else:
-        order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
-    c.execute(order)
+        db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+    c.execute(db_order)
     conn.commit()
-    console.print(order)
+    console.print(f'[info]DB Order:[/info]{db_order}')
+    console.print(f'[info]Binance Order:[/info]{order}')
 
 def get_buy_value(curr):
     c.execute(f'SELECT price FROM orders WHERE Currency = "{curr}" order by market_date desc LIMIT 1')
