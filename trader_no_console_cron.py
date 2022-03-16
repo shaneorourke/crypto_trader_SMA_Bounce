@@ -132,7 +132,7 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+    binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
         write_to_file(f'{curr}',f'Upping Quantity:{float(qty_decimals(curr,close,qty2))}')
