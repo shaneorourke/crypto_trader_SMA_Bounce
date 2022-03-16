@@ -137,12 +137,12 @@ def trader(curr):
     binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
-        write_to_file(f'{curr}',f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
+        write_to_file(f'{curr}',f'Upping Quantity:{float(qty2)}')
         qty=qty2
     else:
         binance_buy = False
-        write_to_file(f'{curr}',f'[info]More USDT Needed Min is:[/info][integer]{minimum_wallet}[/integer]')
-    write_to_file(f'{curr}',f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
+        write_to_file(f'{curr}',f'More USDT Needed Min is:{minimum_wallet}')
+    write_to_file(f'{curr}',f'Binance Buy:{binance_buy}')
     qty = qty_decimals(curr,close,qty)
     write_to_file(f'{curr}',f'USDT Wallet:{float(usdt)}')
     write_to_file(f'{curr}',f'Current Price:{float(close)}')
