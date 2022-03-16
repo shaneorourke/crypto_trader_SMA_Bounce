@@ -79,9 +79,8 @@ def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
         order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
     else:
         order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
-        console.print(order)
-        c.execute(order)
-        conn.commit()
+    c.execute(order)
+    conn.commit()
     console.print(order)
 
 def get_buy_value(curr):
