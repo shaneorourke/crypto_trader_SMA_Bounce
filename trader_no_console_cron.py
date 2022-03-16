@@ -111,10 +111,8 @@ def qty_decimals(curr,close=float,qty=float):
     base_qty = postframe[postframe.Currency == curr].quantity.values[0]
     if len(str(round(close,2))) - str(close).find('.') == 2:
         close = float(str(round(close,2))+'1')
-        print(close)
     if str(close).find('.') == -1:
         close = float(str(round(close,2))+'.11')
-        print(close)
     if qty < base_qty:
         qty=base_qty
     else:
@@ -137,7 +135,7 @@ def trader(curr):
     binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
-        write_to_file(f'{curr}',f'Upping Quantity:{float(qty2)}')
+        write_to_file(f'{curr}',f'Upping Quantity:{float(qty_decimals(curr,close,qty2))}')
         qty=qty2
     else:
         binance_buy = False
@@ -155,6 +153,9 @@ def trader(curr):
                 write_to_file(f'{curr}',f'Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)
+            else:
+                distane_from_trigger = close - lastrow.SlowSMA
+                write_to_file(f'{curr}',f'Close needs to drop:{round(float(distane_from_trigger),2)}')
         if lastrow.FastSMA < lastrow.SlowSMA:
             write_to_file(f'{curr}','Looking for BUY Slow over Fast')
             if lastrow.Close > lastrow.SlowSMA:
@@ -162,6 +163,9 @@ def trader(curr):
                 write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,False,lastrow.Close,'buy')
                 changepos(curr, buy=True)               
+            else:
+                distane_from_trigger = close - lastrow.SlowSMA
+                write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)

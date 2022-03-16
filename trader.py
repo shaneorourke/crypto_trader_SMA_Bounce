@@ -101,10 +101,8 @@ def qty_decimals(curr,close=float,qty=float):
     base_qty = postframe[postframe.Currency == curr].quantity.values[0]
     if len(str(round(close,2))) - str(close).find('.') == 2:
         close = float(str(round(close,2))+'1')
-        print(close)
     if str(close).find('.') == -1:
         close = float(str(round(close,2))+'.11')
-        print(close)
     if qty < base_qty:
         qty=base_qty
     else:
@@ -127,7 +125,7 @@ def trader(curr):
     binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
-        console.print(f'[info]Upping Quantity:[/info][integer]{float(qty2)}[/integer]')
+        console.print(f'[info]Upping Quantity:[/info][integer]{float(qty_decimals(curr,close,qty2))}[/integer]')
         qty=qty2
     else:
         binance_buy = False
@@ -146,6 +144,9 @@ def trader(curr):
                 console.print(f'Fast over Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
                 changepos(curr, buy=True)
+            else:
+                distane_from_trigger = close - lastrow.SlowSMA
+                console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
         if lastrow.FastSMA < lastrow.SlowSMA:
             console.print('[info]Looking for BUY Slow over Fast[/info]')
             if lastrow.Close > lastrow.SlowSMA:
@@ -153,6 +154,9 @@ def trader(curr):
                 console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
                 changepos(curr, buy=True)
+            else:
+                distane_from_trigger = close - lastrow.SlowSMA
+                console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
     if int(position) != 0:
         console.print('[info]Looking for SELL[/info]')
         buy_price = get_buy_value(curr)
