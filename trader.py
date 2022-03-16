@@ -122,7 +122,7 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+    binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
         console.print(f'[info]Upping Quantity:[/info][integer]{float(qty_decimals(curr,close,qty2))}[/integer]')
@@ -148,16 +148,16 @@ def trader(curr):
                 distane_from_trigger = close - lastrow.SlowSMA
                 console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
         ## Uncomment for futures should be a short here
-        #if lastrow.FastSMA < lastrow.SlowSMA:
-        #    console.print('[info]Looking for BUY Slow over Fast[/info]')
-        #    if lastrow.Close > lastrow.SlowSMA:
-        #        # Short Position -- Currently in long - change to short / sell for futures
-        #        console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
-        #        market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
-        #        changepos(curr, buy=True)
-        #    else:
-        #        distane_from_trigger = close - lastrow.SlowSMA
-        #        console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
+        if lastrow.FastSMA < lastrow.SlowSMA:
+            console.print('[info]Looking for BUY Slow over Fast[/info]')
+            if lastrow.Close > lastrow.SlowSMA:
+                # Short Position -- Currently in long - change to short / sell for futures
+                console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
+                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy')
+                changepos(curr, buy=True)
+            else:
+                distane_from_trigger = close - lastrow.SlowSMA
+                console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
     if int(position) != 0:
         console.print('[info]Looking for SELL[/info]')
         buy_price = get_buy_value(curr)
