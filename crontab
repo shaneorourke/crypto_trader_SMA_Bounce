@@ -3,4 +3,4 @@
 ## This will run every minute
 
 # Crypto Trading
-* * * * * root /usr/bin/bash /home/pi/Documents/git/crypto_trader_SMA_Bounce/run_trader_cron.sh 2> /tmp/crontab_script_log.txt 2>&1
+* * * * * root /usr/bin/bash /home/pi/Documents/git/crypto_trader_SMA_Bounce/run_trader_cron.sh >> /home/pi/Documents/cronlogs/crontab_script_log_$(date +\%Y\%m\%d\%H\%M\%S).txt 2>&1

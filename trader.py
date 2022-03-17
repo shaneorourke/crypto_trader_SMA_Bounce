@@ -82,6 +82,7 @@ def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
         db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
     else:
         db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+        order = db_order
     c.execute(db_order)
     conn.commit()
     console.print(f'[info]DB Order:[/info]{db_order}')
@@ -126,10 +127,24 @@ def check_sale_sold(curr):
     else:
         return True
 
+def x_minutes_hourly_slowSMA_avg(curr):
+    c.execute(f"""select avg(SlowSMA) from hourly 
+                where Currency = "{curr}"
+                and SlowSMA is not NULL
+                order by "index" desc
+                limit 100""")
+    result = c.fetchone()
+    result = clean_up_sql_out(result,0)
+    result = float(result)
+    return result
+
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
     df = gethourlydata(curr)
     applytechnicals(df)
+    df['Currency'] = curr
+    df['market_date'] = datetime.now()
+    df.to_sql(con=conn,name='hourly',if_exists='append',index=True)
     lastrow = df.iloc[-1]
     position = check_position(curr)
     console.print(f'[info]Currency:[/info]{curr}')
@@ -164,23 +179,28 @@ def trader(curr):
                 distane_from_trigger = close - lastrow.SlowSMA
                 console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
         ## Uncomment for futures should be a short here
-        if lastrow.FastSMA < lastrow.SlowSMA:
-            console.print('[info]Looking for BUY Slow over Fast[/info]')
-            if lastrow.Close > lastrow.SlowSMA:
-                # Short Position -- Currently in long - change to short / sell for futures
-                console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
-                changepos(curr, buy=True)
-            else:
-                distane_from_trigger = close - lastrow.SlowSMA
-                console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
+        average_SMA = x_minutes_hourly_slowSMA_avg(curr)
+        if lastrow.SlowSMA > average_SMA: #If UP TREND
+            console.print(f'[info]SlowSMA above Average SlowSMA 100 mins[/info][integer]{round(float(average_SMA),2)}[/integer]')
+            if lastrow.FastSMA < lastrow.SlowSMA:
+                console.print('[info]Looking for BUY Slow over Fast[/info]')
+                if lastrow.Close > lastrow.SlowSMA:
+                    # Short Position -- Currently in long - change to short / sell for futures
+                    console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
+                    market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
+                    changepos(curr, buy=True)
+                else:
+                    distane_from_trigger = close - lastrow.SlowSMA
+                    console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
+        else:
+            console.print('[info]SlowSMA NOT above Average SlowSMA 100 mins[/info]')
     if int(position) != 0:
         console.print('[info]Looking for SELL[/info]')
         buy_price = get_buy_value(curr)
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
-        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
+        binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
         console.print(f'[info]Buy Price:[/info][integer]{round(float(buy_price),2)}[/integer]')
         console.print(f'[info]Take Profit:[/info][integer]{round(float(take_profit_price),2)}[/integer]')
         console.print(f'[info]Stop Price:[/info][integer]{round(float(stop),2)}[/integer]')
