@@ -165,6 +165,7 @@ def trader(curr):
     if int(position) == 0:
         if lastrow.FastSMA > lastrow.SlowSMA:
             write_to_file(f'{curr}','Looking for BUY Fast over Slow')
+            write_to_file(f'{curr}',f'Binance Buy:{binance_buy}')
             if lastrow.Close < lastrow.SlowSMA:
                 write_to_file(f'{curr}',f'Slow SMA Bounce Long Position Trigger')
                 market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_fast_over_slow')
@@ -194,6 +195,7 @@ def trader(curr):
         write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')
         qty = get_buy_qty(curr)
         write_to_file(f'{curr}',f'Buy Qty:{round(float(qty),2)}')
+        write_to_file(f'{curr}',f'Binance Buy:{binance_buy}')
         if lastrow.Close >= take_profit_price:
             write_to_file(f'{curr}','Take Profit Triggered Sale')
             market_order(curr,qty,False,binance_buy,lastrow.Close,'TP')

@@ -146,7 +146,6 @@ def trader(curr):
     else:
         binance_buy = False
         console.print(f'[info]More USDT Needed Min is:[/info][integer]{minimum_wallet}[/integer]')
-    console.print(f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
     qty = qty_decimals(curr,close,qty)
     console.print(f'[info]USDT Wallet:[/info][integer]{float(usdt)}[/integer]')
     console.print(f'[info]Current Price:[/info][integer]{float(close)}[/integer]')
@@ -155,6 +154,7 @@ def trader(curr):
         console.print(f'[info]SlowSMA Price:[/info][integer]{round(float(lastrow.SlowSMA),2)}[/integer]')
         if lastrow.FastSMA > lastrow.SlowSMA:
             console.print('[info]Looking for BUY Fast over Slow[/info]')
+            console.print(f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
             if lastrow.Close < lastrow.SlowSMA:
                 # Long Position
                 console.print(f'Fast over Slow SMA Bounce Long Position Trigger')
@@ -185,7 +185,8 @@ def trader(curr):
         console.print(f'[info]Take Profit:[/info][integer]{round(float(take_profit_price),2)}[/integer]')
         console.print(f'[info]Stop Price:[/info][integer]{round(float(stop),2)}[/integer]')
         qty = get_buy_qty(curr)
-        console.print(f'[info]Buy Price:[/info][integer]{round(float(qty),2)}[/integer]')
+        console.print(f'[info]Buy Qty:[/info][integer]{round(float(qty),2)}[/integer]')
+        console.print(f'[info]Binance Buy:[/info][integer]{binance_buy}[/integer]')
         if lastrow.Close >= take_profit_price:
             console.print('[pos_warning]Take Profit Triggered Sale[/pos_warning]')
             market_order(curr,qty,False,False,lastrow.Close,'TP')
