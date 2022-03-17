@@ -180,6 +180,7 @@ def trader(curr):
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
+        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
         console.print(f'[info]Buy Price:[/info][integer]{round(float(buy_price),2)}[/integer]')
         console.print(f'[info]Take Profit:[/info][integer]{round(float(take_profit_price),2)}[/integer]')
         console.print(f'[info]Stop Price:[/info][integer]{round(float(stop),2)}[/integer]')

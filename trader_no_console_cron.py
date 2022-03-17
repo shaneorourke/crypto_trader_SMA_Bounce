@@ -188,6 +188,7 @@ def trader(curr):
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
+        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
         write_to_file(f'{curr}',f'Buy Price:{round(float(buy_price),2)}')
         write_to_file(f'{curr}',f'Take Profit:{round(float(take_profit_price),2)}')
         write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')
