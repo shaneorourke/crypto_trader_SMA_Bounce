@@ -164,7 +164,7 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
-        if lastrow.SlowSMA > lastrow.SuperSlow: #If UP TREND
+        if lastrow.FastSMA > lastrow.SuperSlow: #If UP TREND
             console.print(f'[info]SlowSMA above SuperSlow Uptrend:[/info][integer]{round(float(lastrow.SuperSlow),2)}[/integer]')
             if lastrow.FastSMA < lastrow.SlowSMA:
                 console.print('[info]Looking for BUY Slow over Fast[/info]')

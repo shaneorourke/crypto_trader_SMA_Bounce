@@ -173,7 +173,7 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 write_to_file(f'{curr}',f'Close needs to drop:{round(float(distane_from_trigger),2)}')
-        if lastrow.SlowSMA > lastrow.SuperSlow: #If UP TREND
+        if lastrow.FastSMA > lastrow.SuperSlow: #If UP TREND
             write_to_file(f'{curr}',f'SlowSMA above SuperSlow Uptrend:{round(float(lastrow.SuperSlow),2)}')
             if lastrow.FastSMA < lastrow.SlowSMA:
                 write_to_file(f'{curr}','Looking for BUY Slow over Fast')
