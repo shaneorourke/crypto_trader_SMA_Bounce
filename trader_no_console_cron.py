@@ -76,7 +76,7 @@ def gethourlydata(symbol):
 def applytechnicals(df):
     df['FastSMA'] = df.Close.rolling(7).mean()
     df['SlowSMA'] = df.Close.rolling(25).mean()
-    #df.to_sql(name='hourlydata',con=conn,if_exists='append')
+    df['SuperSlow'] = df.Close.rolling(50).mean()
 
 
 def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
@@ -136,23 +136,10 @@ def check_sale_sold(curr):
     else:
         return True
 
-def x_minutes_hourly_slowSMA_avg(curr):
-    c.execute(f"""select avg(SlowSMA) from hourly 
-                where Currency = "{curr}"
-                and SlowSMA is not NULL
-                order by "index" desc
-                limit 100""")
-    result = c.fetchone()
-    result = clean_up_sql_out(result,0)
-    result = float(result)
-    return result
-
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
     df = gethourlydata(curr)
     applytechnicals(df)
-    df['Currency'] = curr
-    df.to_sql(con=conn,name='hourly',if_exists='append')
     lastrow = df.iloc[-1]
     position = check_position(curr)
     write_to_file(f'{curr}',f'Currency:{curr}')
@@ -161,7 +148,7 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
+    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     if usdt >= minimum_wallet:
         write_to_file(f'{curr}',f'Upping Quantity:{float(qty_decimals(curr,close,qty2))}')
@@ -186,10 +173,8 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 write_to_file(f'{curr}',f'Close needs to drop:{round(float(distane_from_trigger),2)}')
-        ## Uncomment for futures - should be short / sell here
-        average_SMA = x_minutes_hourly_slowSMA_avg(curr)
-        if lastrow.SlowSMA > average_SMA: #If UP TREND
-            write_to_file(f'{curr}',f'SlowSMA above Average SlowSMA 100 mins{round(float(average_SMA),2)}')
+        if lastrow.SlowSMA > lastrow.SuperSlow: #If UP TREND
+            write_to_file(f'{curr}',f'SlowSMA above SuperSlow Uptrend:{round(float(lastrow.SuperSlow),2)}')
             if lastrow.FastSMA < lastrow.SlowSMA:
                 write_to_file(f'{curr}','Looking for BUY Slow over Fast')
                 if lastrow.Close > lastrow.SlowSMA:
@@ -199,15 +184,16 @@ def trader(curr):
                 else:
                     distane_from_trigger = close - lastrow.SlowSMA
                     write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
-            else:
-                write_to_file(f'{curr}','SlowSMA NOT above Average SlowSMA 100 mins[/info]')
+        else:
+            write_to_file(f'{curr}','SlowSMA NOT above SuperSlowSMA Downtrend')
+            # Short would go here
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
-        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
+        binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
         write_to_file(f'{curr}',f'Buy Price:{round(float(buy_price),2)}')
         write_to_file(f'{curr}',f'Take Profit:{round(float(take_profit_price),2)}')
         write_to_file(f'{curr}',f'Stop Price:{round(float(stop),2)}')

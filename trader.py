@@ -66,7 +66,7 @@ def gethourlydata(symbol):
 def applytechnicals(df):
     df['FastSMA'] = df.Close.rolling(7).mean()
     df['SlowSMA'] = df.Close.rolling(25).mean()
-    #df.to_sql(name='hourlydata',con=conn,if_exists='append')
+    df['SuperSlow'] = df.Close.rolling(50).mean()
 
 
 def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
@@ -127,24 +127,10 @@ def check_sale_sold(curr):
     else:
         return True
 
-def x_minutes_hourly_slowSMA_avg(curr):
-    c.execute(f"""select avg(SlowSMA) from hourly 
-                where Currency = "{curr}"
-                and SlowSMA is not NULL
-                order by "index" desc
-                limit 100""")
-    result = c.fetchone()
-    result = clean_up_sql_out(result,0)
-    result = float(result)
-    return result
-
 def trader(curr):
     qty = postframe[postframe.Currency == curr].quantity.values[0]
     df = gethourlydata(curr)
     applytechnicals(df)
-    df['Currency'] = curr
-    df['market_date'] = datetime.now()
-    df.to_sql(con=conn,name='hourly',if_exists='append',index=True)
     lastrow = df.iloc[-1]
     position = check_position(curr)
     console.print(f'[info]Currency:[/info]{curr}')
@@ -178,10 +164,8 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
-        ## Uncomment for futures should be a short here
-        average_SMA = x_minutes_hourly_slowSMA_avg(curr)
-        if lastrow.SlowSMA > average_SMA: #If UP TREND
-            console.print(f'[info]SlowSMA above Average SlowSMA 100 mins[/info][integer]{round(float(average_SMA),2)}[/integer]')
+        if lastrow.SlowSMA > lastrow.SuperSlow: #If UP TREND
+            console.print(f'[info]SlowSMA above SuperSlow Uptrend:[/info][integer]{round(float(lastrow.SuperSlow),2)}[/integer]')
             if lastrow.FastSMA < lastrow.SlowSMA:
                 console.print('[info]Looking for BUY Slow over Fast[/info]')
                 if lastrow.Close > lastrow.SlowSMA:
@@ -193,7 +177,8 @@ def trader(curr):
                     distane_from_trigger = close - lastrow.SlowSMA
                     console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
         else:
-            console.print('[info]SlowSMA NOT above Average SlowSMA 100 mins[/info]')
+            console.print('[info]SlowSMA NOT above SuperSlowSMA Downtrend[/info]')
+            # short would go here
     if int(position) != 0:
         console.print('[info]Looking for SELL[/info]')
         buy_price = get_buy_value(curr)
