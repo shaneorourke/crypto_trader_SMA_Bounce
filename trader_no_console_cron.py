@@ -66,7 +66,7 @@ def check_position(curr):
     return result
 
 def gethourlydata(symbol):
-    frame = pd.DataFrame(client.get_historical_klines(symbol,'1h','25 hours ago UTC'))
+    frame = pd.DataFrame(client.get_historical_klines(symbol,'1h','50 hours ago UTC'))
     frame = frame.iloc[:,:5]
     frame.columns = ['Time','Open','High','Low','Close']
     frame[['Open','High','Low','Close']] = frame[['Open','High','Low','Close']].astype(float)
