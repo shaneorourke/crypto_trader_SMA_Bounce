@@ -133,9 +133,9 @@ def check_sale_sold(curr):
     else:
         return True
 
-def log_update(Currency,Position,Upping_Quantity,minimum_wallet,binance_buy,usdt_wallet,Quantity,close,buy_sell,ordered,FastSMA,SlowSMA,Fast_over_Slow,side,trend,trigger,log_datetime):
-    c.execute(f"""INSERT INTO logs (Currency,Position,Upping_Quantity,minimum_wallet,binance_buy,usdt_wallet,Quantity,close,buy_sell,ordered,FastSMA,SlowSMA,Fast_over_Slow,side,trend,trigger,log_datetime)
-                VALUES ("{Currency}",{Position},{Upping_Quantity},{minimum_wallet},{binance_buy},{usdt_wallet},{Quantity},{close},{buy_sell},{ordered},{FastSMA},{SlowSMA},{Fast_over_Slow},"{side}","{trend}","{trigger}","{log_datetime}")""")
+def log_update(Currency,Position,Upping_Quantity,minimum_wallet,binance_buy,usdt_wallet,Quantity,close,buy_sell,ordered,FastSMA,SlowSMA,Fast_over_Slow,side,trigger,log_datetime):
+    c.execute(f"""INSERT INTO logs (Currency,Position,Upping_Quantity,minimum_wallet,binance_buy,usdt_wallet,Quantity,close,buy_sell,ordered,FastSMA,SlowSMA,Fast_over_Slow,side,trigger,log_datetime)
+                VALUES ("{Currency}",{Position},{Upping_Quantity},{minimum_wallet},{binance_buy},{usdt_wallet},{Quantity},{close},{buy_sell},{ordered},{FastSMA},{SlowSMA},{Fast_over_Slow},"{side}","{trigger}","{log_datetime}")""")
     conn.commit()
 
 def trader(curr):
@@ -149,14 +149,13 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
+    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     Upping_Quantity = False
     buy_sell = False
     ordered = False
     Fast_over_Slow = False
     trigger = ''
-    trend = 'Up'
     if usdt >= minimum_wallet:
         qty=qty2
         Upping_Quantity = True
@@ -184,7 +183,7 @@ def trader(curr):
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
-        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
+        binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
         qty = get_buy_qty(curr)
         if lastrow.Close >= take_profit_price:
             market_order(curr,qty,False,binance_buy,lastrow.Close,'TP')
@@ -203,7 +202,7 @@ def trader(curr):
                 ordered = True
             else:
                 write_to_file(f'{curr}',f'{log_datetime}:SELL ERROR')
-    log_update(curr,position,Upping_Quantity,minimum_wallet,binance_buy,usdt,qty,close,buy_sell,ordered,lastrow.FastSMA,lastrow.SlowSMA,Fast_over_Slow,side,trend,trigger,log_datetime)
+    log_update(curr,position,Upping_Quantity,minimum_wallet,binance_buy,usdt,qty,close,buy_sell,ordered,lastrow.FastSMA,lastrow.SlowSMA,Fast_over_Slow,side,trigger,log_datetime)
 
 
 for coin in postframe.Currency:
