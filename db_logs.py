@@ -60,7 +60,6 @@ for curr in currencies:
         SlowSMA = row[11]
         Fast_over_Slow = row[12]
         side = row[13]
-        trend = row[14]
         trigger = row[15]
         log_datetime = row[16]
         print(f'Currency:{curr}') 
@@ -73,14 +72,13 @@ for curr in currencies:
         print(f'buy_sell:{buy_sell}') 
         print(f'ordered:{ordered}') 
         print(f'Fast_over_Slow:{Fast_over_Slow}') 
-        print(f'trend:{trend}') 
         print(f'trigger:{trigger}') 
         print(f'log_datetime:{log_datetime}')
         print(f'close:{round(close,2)}') 
         print(f'buy_sell:{buy_sell}') 
         print(f'ordered:{ordered}') 
-        print(f'FastSMA:{FastSMA}') 
-        print(f'SlowSMA:{SlowSMA}')
+        print(f'FastSMA:{round(FastSMA,2)}') 
+        print(f'SlowSMA:{round(SlowSMA,2)}')
         print(f'Fast_over_Slow:{Fast_over_Slow}') 
         print(f'side:{side}')
         print()
