@@ -60,8 +60,8 @@ for curr in currencies:
         SlowSMA = row[11]
         Fast_over_Slow = row[12]
         side = row[13]
-        trigger = row[15]
-        log_datetime = row[16]
+        trigger = row[14]
+        log_datetime = row[15]
         print(f'Currency:{curr}') 
         print(f'Position:{position}') 
         print(f'Upping_Quantity:{Upping_Quantity}') 
