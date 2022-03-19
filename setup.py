@@ -29,7 +29,8 @@ conn.commit()
 c.execute('CREATE TABLE IF NOT EXISTS waiting_for_entry (Currency text, waiting boolean)')
 conn.commit()
 
-c.execute('CREATE TABLE logs (Currency text, Position integer, Upping_Quantity boolean, minimum_wallet float, binance_buy boolean, usdt_wallet, Quantity float, close float, buy_sell boolean, ordered boolean, FastSMA float, SlowSMA float, Fast_over_Slow boolean, side text,trend text, trigger text, log_datetime timestamp)')
+c.execute('Drop Table logs')
+c.execute('CREATE TABLE logs (Currency text, Position integer, Upping_Quantity boolean, minimum_wallet float, binance_buy boolean, usdt_wallet, Quantity float, close float, buy_sell boolean, ordered boolean, FastSMA float, SlowSMA float, Fast_over_Slow boolean, side text, trigger text, log_datetime timestamp)')
 conn.commit()
 
 c.close()
