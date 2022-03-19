@@ -43,9 +43,44 @@ for curr in currencies:
 
     ## Orders
     print()
-    c.execute(f'SELECT * FROM logs WHERE Currency="{curr}" ORDER BY log_datetime DESC limit 20')
+    c.execute(f'SELECT * FROM logs WHERE Currency="{curr}" ORDER BY log_datetime DESC limit 1')
     result = c.fetchall()
     for row in result:
-        print(f'Logs:{clean_up_sql_out(row,1)}')
-
-    print()
+        curr = row[0]
+        position = row[1]
+        Upping_Quantity = row[2]
+        minimum_wallet = row[3]
+        binance_buy = row[4]
+        usdt_wallet = row[5]
+        Quantity = row[6]
+        close = row[7]
+        buy_sell = row[8]
+        ordered = row[9]
+        FastSMA = row[10]
+        SlowSMA = row[11]
+        Fast_over_Slow = row[12]
+        side = row[13]
+        trend = row[14]
+        trigger = row[15]
+        log_datetime = row[16]
+        print(f'Currency:{curr}') 
+        print(f'Position:{position}') 
+        print(f'Upping_Quantity:{Upping_Quantity}') 
+        print(f'minimum_wallet:{round(minimum_wallet,2)}') 
+        print(f'binance_buy:{binance_buy}') 
+        print(f'usdt_wallet:{round(usdt_wallet,2)}') 
+        print(f'Quantity:{Quantity}') 
+        print(f'buy_sell:{buy_sell}') 
+        print(f'ordered:{ordered}') 
+        print(f'Fast_over_Slow:{Fast_over_Slow}') 
+        print(f'trend:{trend}') 
+        print(f'trigger:{trigger}') 
+        print(f'log_datetime:{log_datetime}')
+        print(f'close:{round(close,2)}') 
+        print(f'buy_sell:{buy_sell}') 
+        print(f'ordered:{ordered}') 
+        print(f'FastSMA:{FastSMA}') 
+        print(f'SlowSMA:{SlowSMA}')
+        print(f'Fast_over_Slow:{Fast_over_Slow}') 
+        print(f'side:{side}')
+        print()
