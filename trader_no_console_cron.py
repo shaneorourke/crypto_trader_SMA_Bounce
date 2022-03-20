@@ -92,6 +92,7 @@ def market_order(curr,qty,buy=True,binance_buy=False,price=float,trigger=str):
         db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
     else:
         db_order = f'INSERT INTO orders VALUES("{curr}",{qty},"{side}",{price},"{trigger}","{datetime.now()}")'
+        order = db_order
     c.execute(db_order)
     conn.commit()
     write_to_file(f'{curr}',f'DB Order:{db_order}')
