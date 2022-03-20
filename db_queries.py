@@ -86,20 +86,29 @@ for curr in currencies:
             usdt_profit = usdt_value*(profit/100)
             console.print(f'[info]USDT Profit:$[/info][integer]{round(usdt_profit,2)}[/integer]')
 
-
+    ## Take Profit Distance
+    current_price = float(price['price'])
+    c.execute(f'SELECT round({current_price}-round(price+(price * 0.01),2),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
+    result = c.fetchall()
+    tp_dist = clean_up_sql_out(result,1)
     ## Take Profit Details Est
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
     if position == 'SELLING':
         tp = clean_up_sql_out(result,1)
-        console.print(f'[info]Take Profit[/info][integer]:{tp}[/integer]')
+        console.print(f'[info]Take Profit[/info][integer]:{tp} ({tp_dist})[/integer]')
 
+    ## Stop Distnance Est
+    current_price = float(price['price'])
+    c.execute(f'SELECT round({current_price}-round(price-(price * 0.015),2),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
+    result = c.fetchall()
+    stop_dist = clean_up_sql_out(result,1)
     ## Stop Details Est
     c.execute('SELECT round(price-(price * 0.015),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
     if position == 'SELLING':
         stop = clean_up_sql_out(result,1)
-        console.print(f'[info]Stop Limit[/info][integer]:{stop}[/integer]')
+        console.print(f'[info]Stop Limit[/info][integer]:{stop} ({stop_dist})[/integer]')
 
     ## P and L
     PL = round(float(buy_price) - float(price['price']),2)
