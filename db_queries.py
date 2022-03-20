@@ -111,7 +111,7 @@ for curr in currencies:
         console.print(f'[info]Stop Limit[/info][integer]:{stop} ({stop_dist})[/integer]')
 
     ## P and L
-    PL = round(float(buy_price) - float(price['price']),2)
+    PL = round(float(price['price']) - float(buy_price),2)
     console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
 
     ## Take Profit Details Est
