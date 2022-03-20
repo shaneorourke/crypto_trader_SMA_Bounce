@@ -16,11 +16,10 @@ def clean_up_sql_out(text,isnumber):
     return text
 
 ## Last Update
-c.execute('SELECT * FROM logs WHERE log_datetime BETWEEN "2022-03-19 22:14:06.284954" and "2022-03-20 03:15:06.235669"')
+c.execute('DELETE FROM orders WHERE market_date BETWEEN "2022-03-19 22:14:06.284954" and "2022-03-20 03:15:06.235669"')
 result = c.fetchall()
-result = clean_up_sql_out(result,0)
-for row in result:
-    print(row)
+result = clean_up_sql_out(result,1)
+print(result)
 
 
 #2022-03-19 22:14:06.284954
