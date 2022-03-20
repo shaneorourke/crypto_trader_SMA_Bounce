@@ -149,7 +149,7 @@ def trader(curr):
     wallet = get_wallet(curr)
     usdt = float(wallet[1])
     qty2 = float(usdt) / float(lastrow.Close)
-    binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+    binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
     minimum_wallet = close*qty
     Upping_Quantity = False
     buy_sell = False
@@ -183,7 +183,7 @@ def trader(curr):
         take_profit = float(buy_price) * 0.01
         take_profit_price = float(buy_price) + take_profit
         stop = float(buy_price) - (take_profit * 1.5)
-        binance_buy = False ## True to use REAL binance - Must have over more than in spot wallet
+        binance_buy = True ## True to use REAL binance - Must have over more than in spot wallet
         qty = get_buy_qty(curr)
         if lastrow.Close >= take_profit_price:
             market_order(curr,qty,False,binance_buy,lastrow.Close,'TP')
