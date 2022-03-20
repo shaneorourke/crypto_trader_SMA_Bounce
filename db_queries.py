@@ -91,13 +91,20 @@ for curr in currencies:
     c.execute('SELECT round(price+(price * 0.01),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
     if position == 'SELLING':
-        console.print(f'[info]Take Profit[/info][integer]:{clean_up_sql_out(result,1)}[/integer]')
+        tp = clean_up_sql_out(result,1)
+        console.print(f'[info]Take Profit[/info][integer]:{tp}[/integer]')
 
     ## Stop Details Est
     c.execute('SELECT round(price-(price * 0.015),2) FROM orders WHERE market = "BUY" ORDER BY market_date DESC LIMIT 1')
     result = c.fetchall()
     if position == 'SELLING':
-        console.print(f'[info]Stop Limit[/info][integer]:{clean_up_sql_out(result,1)}[/integer]')
+        stop = clean_up_sql_out(result,1)
+        console.print(f'[info]Stop Limit[/info][integer]:{stop}[/integer]')
+
+    ## P and L
+    PL = round(float(buy_price) - float(price),2)
+    console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
+
 
     console.print()
 ## Profitability
