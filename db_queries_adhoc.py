@@ -19,6 +19,7 @@ def clean_up_sql_out(text,isnumber):
 c.execute('DELETE FROM orders WHERE market_date BETWEEN "2022-03-19 22:14:06.284954" and "2022-03-20 03:15:06.235669"')
 result = c.fetchall()
 result = clean_up_sql_out(result,1)
+conn.commit()
 print(result)
 
 
