@@ -109,7 +109,6 @@ for curr in currencies:
     c.execute('SELECT binance_buy FROM logs ORDER BY log_datetime DESC LIMIT 1')
     result = c.fetchall()
     binance_buy = clean_up_sql_out(result,0)
-    print(binance_buy)
     if binance_buy == '0':
         binance_buy = False
     else:
