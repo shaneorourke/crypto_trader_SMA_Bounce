@@ -15,11 +15,13 @@ def clean_up_sql_out(text,isnumber):
             text = str(text).replace(s,'')
     return text
 
-c.execute('DROP table hourly')
-conn.commit()
 ## Last Update
-c.execute('SELECT * FROM hourly')
+c.execute('SELECT * FROM logs WHERE log_datetime BETWEEN "2022-03-19 22:14:06.284954" and "2022-03-20 03:15:06.235669"')
 result = c.fetchall()
-result = clean_up_sql_out(result,1)
-print(result)
+result = clean_up_sql_out(result,0)
+for row in result:
+    print(row)
 
+
+#2022-03-19 22:14:06.284954
+#2022-03-20 03:15:06.235669
