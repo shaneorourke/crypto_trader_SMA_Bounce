@@ -105,6 +105,16 @@ for curr in currencies:
     PL = round(float(buy_price) - float(price['price']),2)
     console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
 
+    ## Take Profit Details Est
+    c.execute('SELECT binance_buy FROM logs ORDER BY log_datetime DESC LIMIT 1')
+    result = c.fetchall()
+    binance_buy = clean_up_sql_out(result,0)
+    print(binance_buy)
+    if binance_buy == '0':
+        binance_buy = False
+    else:
+        binance_buy = True
+    console.print(f'[info]Binance Buy[/info][integer]:{binance_buy}[/integer]')
 
     console.print()
 ## Profitability
