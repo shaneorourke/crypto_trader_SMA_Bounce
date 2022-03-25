@@ -115,10 +115,20 @@ for curr in currencies:
         PL = round(float(price['price']) - float(buy_price),2)
         console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
 
-
+    ## Current Trade Profit
     if position == 'SELLING':
         current_trade_profit = round((PL / float(buy_price) ) * 100,2)
         console.print(f'[info]Current Trade Profit[/info][integer]:{current_trade_profit}%[/integer]')
+
+    ## Current Trade USDT Profit
+    if position == 'SELLING':
+        c.execute(f'select quantity from orders where market = "BUY" order by market_date desc limit 1')
+        result = c.fetchone()
+        quantity = float(clean_up_sql_out(result,1))
+        usdt_value = float(price['price']) * quantity
+        usdt_profit = usdt_value*(current_trade_profit/100)
+        console.print(f'[info]USDT Profit:$[/info][integer]{round(usdt_profit,2)}[/integer]')
+
 
     ## Take Profit Details Est
     c.execute('SELECT binance_buy FROM logs ORDER BY log_datetime DESC LIMIT 1')
