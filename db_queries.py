@@ -43,7 +43,7 @@ for curr in currencies:
     curr=clean_up_sql_out(curr,0)
     curr=curr.replace("'","")
 
-    console.print(f'[info]##### CURRENCY[/info][integer]:{curr}[/integer]')
+    console.print(f'[info]##### CURRENCY[/info][integer]:{curr}[/integer][info] #####[/info]')
 
     ## Last Buy Price
     c.execute(f'SELECT price FROM orders WHERE Currency="{curr}" and market = "BUY" ORDER BY market_date DESC limit 1')
@@ -111,8 +111,14 @@ for curr in currencies:
         console.print(f'[info]Stop Limit[/info][integer]:{stop} ({stop_dist})[/integer]')
 
     ## P and L
-    PL = round(float(price['price']) - float(buy_price),2)
-    console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
+    if position == 'SELLING':
+        PL = round(float(price['price']) - float(buy_price),2)
+        console.print(f'[info]Profit & Loss[/info][integer]:{PL}[/integer]')
+
+
+    if position == 'SELLING':
+        current_trade_profit = round((PL / float(buy_price) ) * 100,2)
+        console.print(f'[info]Current Trade Profit[/info][integer]:{current_trade_profit}%[/integer]')
 
     ## Take Profit Details Est
     c.execute('SELECT binance_buy FROM logs ORDER BY log_datetime DESC LIMIT 1')
