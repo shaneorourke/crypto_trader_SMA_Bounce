@@ -72,19 +72,19 @@ for curr in currencies:
     console.print(f'[info]Current Price[/info][integer]:{float(price["price"])}[/integer]')
 
     ## Profitability
-    c.execute(f"""with last_order as (select market, market_date from orders WHERE Currency="{curr}" ORDER BY market_date DESC LIMIT 1)
-                , order_check as(select case when market = 'BUY' then (SELECT round(sum(case when market = "SELL" then price else price*-1 end),2) as profit FROM orders WHERE Currency="{curr}" and market_date != (SELECT market_date FROM last_order)) else (SELECT round(sum(case when market = "SELL" then price else price*-1 end),2) as profit FROM orders WHERE Currency="{curr}") end FROM last_order)
-                select * from order_check""")
-    result = c.fetchall()
+    #c.execute(f"""with last_order as (select market, market_date from orders WHERE Currency="{curr}" ORDER BY market_date DESC LIMIT 1)
+    #            , order_check as(select case when market = 'BUY' then (SELECT round(sum(case when market = "SELL" then price else price*-1 end),2) as profit FROM orders WHERE Currency="{curr}" and market_date != (SELECT market_date FROM last_order)) else (SELECT round(sum(case when market = "SELL" then price else price*-1 end),2) as profit FROM orders WHERE Currency="{curr}") end FROM last_order)
+    #            select * from order_check""")
+    #result = c.fetchall()
     curr_profit = clean_up_sql_out(result,1)
-    if sale_made !='0':
-        if curr_profit != 'None':
-            profit = round((float(curr_profit)/float(price['price']))*100,2)
-            console.print(f'[info]Profit Percentage[/info][integer]:{profit}%[/integer]')
-            qty = 0.001
-            usdt_value = float(price['price']) * qty
-            usdt_profit = usdt_value*(profit/100)
-            console.print(f'[info]USDT Profit:$[/info][integer]{round(usdt_profit,2)}[/integer]')
+    #if sale_made !='0':
+    #    if curr_profit != 'None':
+    #        profit = round((float(curr_profit)/float(price['price']))*100,2)
+    #        console.print(f'[info]Profit Percentage[/info][integer]:{profit}%[/integer]')
+    #        qty = 0.001
+    #        usdt_value = float(price['price']) * qty
+    #        usdt_profit = usdt_value*(profit/100)
+    #        console.print(f'[info]USDT Profit:$[/info][integer]{round(usdt_profit,2)}[/integer]')
 
     ## Take Profit Distance
     current_price = float(price['price'])
