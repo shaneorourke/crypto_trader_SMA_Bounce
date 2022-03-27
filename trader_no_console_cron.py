@@ -173,20 +173,20 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 write_to_file(f'{curr}',f'Close needs to drop:{round(float(distane_from_trigger),2)}')
-        if lastrow.FastSMA > lastrow.SuperSlow: #If UP TREND
-            write_to_file(f'{curr}',f'SlowSMA above SuperSlow Uptrend:{round(float(lastrow.SuperSlow),2)}')
-            if lastrow.FastSMA < lastrow.SlowSMA:
-                write_to_file(f'{curr}','Looking for BUY Slow over Fast')
-                if lastrow.Close > lastrow.SlowSMA:
-                    write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
-                    market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
-                    changepos(curr, buy=True)               
-                else:
-                    distane_from_trigger = close - lastrow.SlowSMA
-                    write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
-        else:
-            write_to_file(f'{curr}','SlowSMA NOT above SuperSlowSMA Downtrend')
-            # Short would go here
+        #if lastrow.FastSMA > lastrow.SuperSlow: #If UP TREND
+        #    write_to_file(f'{curr}',f'SlowSMA above SuperSlow Uptrend:{round(float(lastrow.SuperSlow),2)}')
+        #    if lastrow.FastSMA < lastrow.SlowSMA:
+        #        write_to_file(f'{curr}','Looking for BUY Slow over Fast')
+        #        if lastrow.Close > lastrow.SlowSMA:
+        #            write_to_file(f'{curr}',f'Slow over Fast SMA Bounce Long Position Trigger')
+        #            market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
+        #            changepos(curr, buy=True)               
+        #        else:
+        #            distane_from_trigger = close - lastrow.SlowSMA
+        #            write_to_file(f'{curr}',f'Close needs to rise:{round(float(distane_from_trigger),2)}')
+        #else:
+        #    write_to_file(f'{curr}','SlowSMA NOT above SuperSlowSMA Downtrend')
+        #    # Short would go here
     if int(position) != 0:
         write_to_file(f'{curr}','Looking for SELL')
         buy_price = get_buy_value(curr)

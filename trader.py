@@ -188,18 +188,18 @@ def trader(curr):
             else:
                 distane_from_trigger = close - lastrow.SlowSMA
                 console.print(f'[info]Close needs to drop:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
-        if lastrow.FastSMA < lastrow.SlowSMA:
-            console.print('[info]Looking for BUY Slow over Fast[/info]')
-            if lastrow.Close < lastrow.SlowSMA:
-                # Short Position -- Currently in long - change to short / sell for futures
-                console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
-                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
-                changepos(curr, buy=True)
-                buy_sell = True
-                ordered = True  
-            else:
-                distane_from_trigger = close - lastrow.SlowSMA
-                console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
+        #if lastrow.FastSMA < lastrow.SlowSMA:
+        #    console.print('[info]Looking for BUY Slow over Fast[/info]')
+        #    if lastrow.Close < lastrow.SlowSMA:
+        #        # Short Position -- Currently in long - change to short / sell for futures
+        #        console.print(f'Slow over Fast SMA Bounce Long Position Trigger')
+        #        market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
+        #        changepos(curr, buy=True)
+        #        buy_sell = True
+        #        ordered = True  
+        #    else:
+        #        distane_from_trigger = close - lastrow.SlowSMA
+        #        console.print(f'[info]Close needs to rise:[/info][integer]{round(float(distane_from_trigger),2)}[/integer]')
     if int(position) != 0:
         side = 'SELL'
         console.print('[info]Looking for SELL[/info]')

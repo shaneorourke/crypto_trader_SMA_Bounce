@@ -171,12 +171,12 @@ def trader(curr):
                 changepos(curr, buy=True)
                 buy_sell = True
                 ordered = True
-        if lastrow.FastSMA < lastrow.SlowSMA:
-            if lastrow.Close < lastrow.SlowSMA:
-                market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
-                changepos(curr, buy=True)
-                buy_sell = True
-                ordered = True
+        #if lastrow.FastSMA < lastrow.SlowSMA:
+        #    if lastrow.Close < lastrow.SlowSMA:
+        #        market_order(curr,qty,True,binance_buy,lastrow.Close,'buy_slow_over_fast')
+        #        changepos(curr, buy=True)
+        #        buy_sell = True
+        #        ordered = True
     if int(position) != 0:
         side = 'SELL'
         buy_price = get_buy_value(curr)
