@@ -207,13 +207,13 @@ def trader(curr):
                 changepos(curr,buy=False)
             else:
                 write_to_file(f'{curr}','SELL ERROR')
-        if lastrow.Close < stop:
-            write_to_file(f'{curr}','STOP LOSS TRIGGERED SALE')
-            market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
-            if check_sale_sold(curr):
-                changepos(curr,buy=False)
-            else:
-                write_to_file(f'{curr}','SELL ERROR')
+        #if lastrow.Close < stop:
+        #    write_to_file(f'{curr}','STOP LOSS TRIGGERED SALE')
+        #    market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
+        #    if check_sale_sold(curr):
+        #        changepos(curr,buy=False)
+        #    else:
+        #        write_to_file(f'{curr}','SELL ERROR')
 
 
 for coin in postframe.Currency:

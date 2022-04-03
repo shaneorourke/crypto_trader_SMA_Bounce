@@ -194,14 +194,14 @@ def trader(curr):
                 ordered = True
             else:
                 write_to_file(f'{curr}',f'{log_datetime}:SELL ERROR')
-        if lastrow.Close < stop:
-            trigger = 'SL'
-            market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
-            if check_sale_sold(curr):
-                changepos(curr,buy=False)
-                ordered = True
-            else:
-                write_to_file(f'{curr}',f'{log_datetime}:SELL ERROR')
+        #if lastrow.Close < stop:
+        #    trigger = 'SL'
+        #    market_order(curr,qty,False,binance_buy,lastrow.Close,'SL')
+        #    if check_sale_sold(curr):
+        #        changepos(curr,buy=False)
+        #        ordered = True
+        #    else:
+        #        write_to_file(f'{curr}',f'{log_datetime}:SELL ERROR')
     log_update(curr,position,Upping_Quantity,minimum_wallet,binance_buy,usdt,qty,close,buy_sell,ordered,lastrow.FastSMA,lastrow.SlowSMA,Fast_over_Slow,side,trigger,log_datetime)
 
 

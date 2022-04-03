@@ -115,6 +115,7 @@ def qty_decimals(curr,close=float,qty=float):
         close = float(str(round(close,2))+'.11')
     if qty < base_qty:
         qty=base_qty
+        
     else:
         decimal_limit=len(str(round(close,2)).replace('.',''))-1
         qty=str(qty)[:decimal_limit]
@@ -224,15 +225,15 @@ def trader(curr):
                 ordered = True
             else:
                 console.print('[info]SELL ERROR[/info]')
-        if lastrow.Close < stop:
-            trigger = 'SL'
-            console.print('[neg_warning]STOP LOSS TRIGGERED SALE[/neg_warning]')
-            market_order(curr,qty,False,False,lastrow.Close,'SL')
-            if check_sale_sold(curr):
-                changepos(curr,buy=False)
-                ordered = True
-            else:
-                console.print('[info]SELL ERROR[/info]')
+        #if lastrow.Close < stop:
+        #    trigger = 'SL'
+        #    console.print('[neg_warning]STOP LOSS TRIGGERED SALE[/neg_warning]')
+        #    market_order(curr,qty,False,False,lastrow.Close,'SL')
+        #    if check_sale_sold(curr):
+        #        changepos(curr,buy=False)
+        #        ordered = True
+        #    else:
+        #        console.print('[info]SELL ERROR[/info]')
     log_update(curr,position,Upping_Quantity,minimum_wallet,binance_buy,usdt,qty,close,buy_sell,ordered,lastrow.FastSMA,lastrow.SlowSMA,Fast_over_Slow,side,trend,trigger,log_datetime)
 
 
